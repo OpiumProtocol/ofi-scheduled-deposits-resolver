@@ -1,24 +1,15 @@
-import { BigInt, JSON } from "@polywrap/wasm-as";
-import {
-  Ethereum_Module,
-  Graph_Module,
-  Logger_Logger_LogLevel,
-  Logger_Module,
-  Http_Module,
-} from "./wrap";
-import { Args_checker, CheckerResult } from "./wrap";
-import { GelatoArgs } from "./wrap/GelatoArgs";
-import { UserArgs } from "./wrap/UserArgs";
+import { Args_checker, CheckerResult } from "./wrap"
+import { UserArgs } from "./wrap/UserArgs"
+
+import { checkDeposits } from './deposits'
+import { checkWithdrawals } from './withdrawals'
 
 export function checker(args: Args_checker): CheckerResult {
-  let userArgs = UserArgs.fromBuffer(args.userArgsBuffer);
-  let gelatoArgs = GelatoArgs.fromBuffer(args.gelatoArgsBuffer);
+  let userArgs = UserArgs.fromBuffer(args.userArgsBuffer)
 
-  let gasPrice = gelatoArgs.gasPrice;
-  let timeStamp = gelatoArgs.timeStamp;
+  if (userArgs.schedulerType == 'deposit') {
+    return checkDeposits(userArgs.schedulerAddress, userArgs.subgraphName, args)
+  }
 
-  let canExec = false;
-  let execData = "";
-
-  return { canExec, execData };
+  return checkWithdrawals(userArgs.schedulerAddress, userArgs.subgraphName, args)
 }

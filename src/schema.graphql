@@ -19,7 +19,11 @@ type CheckerResult {
 """
 Only modify "UserArgs"
 """
-type UserArgs {}
+type UserArgs {
+  schedulerType: String!
+  schedulerAddress: String!
+  subgraphName: String!
+}
 
 type GelatoArgs {
   gasPrice: BigInt!
